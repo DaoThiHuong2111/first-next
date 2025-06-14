@@ -38,7 +38,7 @@ const UseRefExample = () => {
   // Lưu previous value
   useEffect(() => {
     previousValueRef.current = inputValue
-  })
+  }, [inputValue])
   
   // Timer logic
   useEffect(() => {
@@ -63,35 +63,69 @@ const UseRefExample = () => {
   // DOM manipulation handlers
   const handleFocusInput = () => {
     // Truy cập DOM element qua ref
-    inputRef.current?.focus()
+    try {
+      inputRef.current?.focus()
+    } catch (error) {
+      console.warn('Focus input error:', error)
+    }
   }
   
   const handleClearInput = () => {
-    if (inputRef.current) {
-      inputRef.current.value = ''
-      inputRef.current.focus()
-      setInputValue('')
+    try {
+      if (inputRef.current) {
+        inputRef.current.value = ''
+        inputRef.current.focus()
+        setInputValue('')
+      }
+    } catch (error) {
+      console.warn('Clear input error:', error)
     }
   }
   
   const handlePlayVideo = () => {
-    videoRef.current?.play()
+    try {
+      videoRef.current?.play().catch(error => {
+        console.warn('Video play failed:', error)
+      })
+    } catch (error) {
+      console.warn('Video play error:', error)
+    }
   }
   
   const handlePauseVideo = () => {
-    videoRef.current?.pause()
+    try {
+      videoRef.current?.pause()
+    } catch (error) {
+      console.warn('Video pause error:', error)
+    }
   }
   
   const handleScrollToTop = () => {
-    scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+    try {
+      scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+    } catch (error) {
+      console.warn('Scroll to top error:', error)
+      // Fallback to scrollTop
+      if (scrollRef.current) {
+        scrollRef.current.scrollTop = 0
+      }
+    }
   }
   
   const handleScrollToBottom = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo({ 
-        top: scrollRef.current.scrollHeight, 
-        behavior: 'smooth' 
-      })
+    try {
+      if (scrollRef.current) {
+        scrollRef.current.scrollTo({ 
+          top: scrollRef.current.scrollHeight, 
+          behavior: 'smooth' 
+        })
+      }
+    } catch (error) {
+      console.warn('Scroll to bottom error:', error)
+      // Fallback to scrollTop
+      if (scrollRef.current) {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+      }
     }
   }
   
@@ -111,7 +145,11 @@ const UseRefExample = () => {
   
   // Scroll event handler
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    setScrollY(e.currentTarget.scrollTop)
+    try {
+      setScrollY(e.currentTarget.scrollTop)
+    } catch (error) {
+      console.warn('Scroll event error:', error)
+    }
   }
   
   return (
@@ -182,8 +220,24 @@ const UseRefExample = () => {
               controls
               className="rounded-lg mb-3"
               poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2NjYyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM2NjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5TYW1wbGUgVmlkZW88L3RleHQ+PC9zdmc+"
+              onError={(e) => {
+                console.warn('Video failed to load:', e)
+              }}
             >
-              <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+              <source 
+                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" 
+                type="video/mp4"
+                onError={(e) => {
+                  console.warn('Video source failed to load:', e)
+                }}
+              />
+              <source 
+                src="https://www.w3schools.com/html/mov_bbb.mp4" 
+                type="video/mp4"
+                onError={(e) => {
+                  console.warn('Fallback video source failed to load:', e)
+                }}
+              />
               Your browser does not support the video tag.
             </video>
             
