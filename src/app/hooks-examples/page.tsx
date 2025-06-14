@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import UseStateExample from '@/components/examples/UseStateExample'
 import UseReducerExample from '@/components/examples/UseReducerExample'
 import UseContextExample from '@/components/examples/UseContextExample'
@@ -23,6 +23,21 @@ import UseDebugValueExample from '@/components/examples/UseDebugValueExample'
 import UseSelectedLayoutSegmentExample from '@/components/examples/UseSelectedLayoutSegmentExample'
 import UseSelectedLayoutSegmentsExample from '@/components/examples/UseSelectedLayoutSegmentsExample'
 import UseLinkStatusExample from '@/components/examples/UseLinkStatusExample'
+
+/**
+ * Custom hook to check if component is mounted on client
+ * Prevents hydration mismatches by ensuring components with browser APIs 
+ * only render after hydration is complete
+ */
+const useIsClient = () => {
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  return isClient
+}
 
 /**
  * Hooks Examples Main Page
@@ -280,6 +295,7 @@ const categories = Array.from(new Set(hooksInfo.map(hook => hook.category)))
 const HooksExamplesPage = () => {
   const [activeHook, setActiveHook] = useState<HookType>('useState')
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
+  const isClient = useIsClient()
   
   // Filter hooks dựa trên category
   const filteredHooks = selectedCategory === 'All' 
@@ -392,7 +408,17 @@ const HooksExamplesPage = () => {
           
           {/* Main Content Area */}
           <div className="lg:col-span-3">
-            {ActiveComponent ? (
+            {!isClient ? (
+              // Loading placeholder during hydration
+              <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+                <div className="animate-pulse">
+                  <div className="w-16 h-16 bg-gray-200 rounded-full mx-auto mb-4"></div>
+                  <div className="h-8 bg-gray-200 rounded w-1/2 mx-auto mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
+                </div>
+                <p className="text-gray-500 text-sm mt-4">Loading example...</p>
+              </div>
+            ) : ActiveComponent ? (
               <div className="bg-white rounded-lg shadow-sm">
                 <ActiveComponent />
               </div>

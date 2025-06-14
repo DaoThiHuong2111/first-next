@@ -58,7 +58,7 @@ const UseEffectExample = () => {
   // States cho các examples
   const [count, setCount] = useState(0)
   const [name, setName] = useState('')
-  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
+  const [windowSize, setWindowSize] = useState({ width: 1024, height: 768 }) // Default for SSR
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isOnline, setIsOnline] = useState(true)
   const [fetchUrl, setFetchUrl] = useState('')

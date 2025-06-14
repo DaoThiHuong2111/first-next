@@ -513,12 +513,15 @@ const ShoppingCartDemo = () => {
 
 // Performance comparison component
 const PerformanceComparison = () => {
-  const [manualOnline, setManualOnline] = useState(navigator.onLine)
+  const [manualOnline, setManualOnline] = useState(true) // Default for SSR
   const syncOnline = useOnlineStatus()
   const [renderCount, setRenderCount] = useState(0)
   
   // Manual implementation (less efficient)
   useEffect(() => {
+    // Set initial state from navigator when client-side
+    setManualOnline(navigator.onLine)
+    
     const handleOnline = () => setManualOnline(true)
     const handleOffline = () => setManualOnline(false)
     

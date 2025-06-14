@@ -32,11 +32,12 @@ const useCounter = (initialValue: number = 0) => {
 
 // Example 2: useDebugValue with format function
 const useOnlineStatus = () => {
-  const [isOnline, setIsOnline] = useState(() => 
-    typeof navigator !== 'undefined' ? navigator.onLine : true
-  )
+  const [isOnline, setIsOnline] = useState(true) // Default to online for SSR
   
   useEffect(() => {
+    // Set initial state from navigator when client-side
+    setIsOnline(navigator.onLine)
+    
     const handleOnline = () => setIsOnline(true)
     const handleOffline = () => setIsOnline(false)
     
@@ -207,16 +208,20 @@ const useForm = (initialData: FormData) => {
 
 // Example 5: useLocalStorage với debug value
 const useLocalStorage = <T,>(key: string, defaultValue: T) => {
-  const [storedValue, setStoredValue] = useState<T>(() => {
+  const [storedValue, setStoredValue] = useState<T>(defaultValue) // Initialize with default for SSR
+  
+  // Load from localStorage on client-side mount
+  useEffect(() => {
     try {
       const item = window.localStorage.getItem(key)
-      return item ? JSON.parse(item) : defaultValue
+      if (item) {
+        setStoredValue(JSON.parse(item))
+      }
     } catch (error) {
       console.error(`Error reading localStorage key "${key}":`, error)
-      return defaultValue
     }
-  })
-  
+  }, [key])
+
   const setValue = useCallback((value: T | ((val: T) => T)) => {
     try {
       const valueToStore = value instanceof Function ? value(storedValue) : value
