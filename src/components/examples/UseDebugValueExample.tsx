@@ -125,15 +125,15 @@ interface FormData {
 
 const useForm = (initialData: FormData) => {
   const [values, setValues] = useState(initialData)
-  const [errors, setErrors] = useState<Partial<FormData>>({})
-  const [touched, setTouched] = useState<Record<keyof FormData, boolean>>({
+  const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({})
+  const [touched, setTouchedState] = useState<Record<keyof FormData, boolean>>({
     name: false,
     email: false,
     age: false
   })
   
   const validate = useCallback((data: FormData) => {
-    const newErrors: Partial<FormData> = {}
+    const newErrors: Partial<Record<keyof FormData, string>> = {}
     
     if (!data.name.trim()) {
       newErrors.name = 'Name is required'
@@ -169,18 +169,18 @@ const useForm = (initialData: FormData) => {
     }
   }, [values, touched, validate])
   
-  const setTouched = useCallback((field: keyof FormData) => {
-    setTouched(prev => ({ ...prev, [field]: true }))
+    const setTouched = useCallback((field: keyof FormData) => {
+    setTouchedState(prev => ({ ...prev, [field]: true }))
     
     // Validate when field is touched
     const newErrors = validate(values)
     setErrors(newErrors)
   }, [values, validate])
-  
+
   const reset = useCallback(() => {
     setValues(initialData)
     setErrors({})
-    setTouched({ name: false, email: false, age: false })
+    setTouchedState({ name: false, email: false, age: false })
   }, [initialData])
   
   // Debug information for form state

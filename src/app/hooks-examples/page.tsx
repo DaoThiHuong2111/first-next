@@ -20,6 +20,9 @@ import UseDeferredValueExample from '@/components/examples/UseDeferredValueExamp
 import UseInsertionEffectExample from '@/components/examples/UseInsertionEffectExample'
 import UseSyncExternalStoreExample from '@/components/examples/UseSyncExternalStoreExample'
 import UseDebugValueExample from '@/components/examples/UseDebugValueExample'
+import UseSelectedLayoutSegmentExample from '@/components/examples/UseSelectedLayoutSegmentExample'
+import UseSelectedLayoutSegmentsExample from '@/components/examples/UseSelectedLayoutSegmentsExample'
+import UseLinkStatusExample from '@/components/examples/UseLinkStatusExample'
 
 /**
  * Hooks Examples Main Page
@@ -40,6 +43,9 @@ type HookType =
   | 'usePathname'
   | 'useSearchParams'
   | 'useParams'
+  | 'useSelectedLayoutSegment'
+  | 'useSelectedLayoutSegments'
+  | 'useLinkStatus'
   | 'useMemo'
   | 'useCallback'
   | 'useId'
@@ -167,6 +173,33 @@ const hooksInfo: HookInfo[] = [
     icon: '🏷️',
     available: true,
     component: UseParamsExample
+  },
+  {
+    id: 'useSelectedLayoutSegment',
+    name: 'useSelectedLayoutSegment',
+    category: 'Navigation',
+    description: 'Đọc active layout segment cho navigation và breadcrumb',
+    icon: '📐',
+    available: true,
+    component: UseSelectedLayoutSegmentExample
+  },
+  {
+    id: 'useSelectedLayoutSegments',
+    name: 'useSelectedLayoutSegments',
+    category: 'Navigation',
+    description: 'Đọc tất cả active layout segments cho complex routing',
+    icon: '🗂️',
+    available: true,
+    component: UseSelectedLayoutSegmentsExample
+  },
+  {
+    id: 'useLinkStatus',
+    name: 'useLinkStatus',
+    category: 'Navigation',
+    description: 'Theo dõi trạng thái loading của navigation transitions',
+    icon: '⚡',
+    available: true,
+    component: UseLinkStatusExample
   },
   {
     id: 'useMemo',
