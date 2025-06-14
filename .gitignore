@@ -55,3 +55,5 @@ next-env.d.ts
 /.vscode
 .vscode
 .vscode/*
+memory_bank
+/memory_bank
