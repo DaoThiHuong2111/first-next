@@ -215,25 +215,42 @@ const TimingDemo = () => {
   const [executionOrder, setExecutionOrder] = useState<string[]>([])
   const [isVisible, setIsVisible] = useState(false)
   const renderCount = useRef(0)
+  const isMountedRef = useRef(true)
+  
+  // Track mounted state
+  useEffect(() => {
+    isMountedRef.current = true
+    return () => {
+      isMountedRef.current = false
+    }
+  }, [])
   
   // Reset execution order when visibility toggles
   useEffect(() => {
-    setExecutionOrder([])
+    if (isMountedRef.current) {
+      setExecutionOrder([])
+    }
   }, [isVisible])
   
   useInsertionEffect(() => {
     console.log('🔵 useInsertionEffect executed')
-    setExecutionOrder(prev => [...prev, `${Date.now()}: useInsertionEffect executed`])
+    if (isMountedRef.current) {
+      setExecutionOrder(prev => [...prev, `${Date.now()}: useInsertionEffect executed`])
+    }
   }, [isVisible])
   
   useLayoutEffect(() => {
     console.log('🟡 useLayoutEffect executed')
-    setExecutionOrder(prev => [...prev, `${Date.now()}: useLayoutEffect executed`])
+    if (isMountedRef.current) {
+      setExecutionOrder(prev => [...prev, `${Date.now()}: useLayoutEffect executed`])
+    }
   }, [isVisible])
   
   useEffect(() => {
     console.log('🟢 useEffect executed')
-    setExecutionOrder(prev => [...prev, `${Date.now()}: useEffect executed`])
+    if (isMountedRef.current) {
+      setExecutionOrder(prev => [...prev, `${Date.now()}: useEffect executed`])
+    }
   }, [isVisible])
   
   return (
