@@ -8,6 +8,18 @@ import UseRefExample from '@/components/examples/UseRefExample'
 import UseEffectExample from '@/components/examples/UseEffectExample'
 import UseImperativeHandleExample from '@/components/examples/UseImperativeHandleExample'
 import UseLayoutEffectExample from '@/components/examples/UseLayoutEffectExample'
+import UseRouterExample from '@/components/examples/UseRouterExample'
+import UsePathnameExample from '@/components/examples/UsePathnameExample'
+import UseSearchParamsExample from '@/components/examples/UseSearchParamsExample'
+import UseParamsExample from '@/components/examples/UseParamsExample'
+import UseMemoExample from '@/components/examples/UseMemoExample'
+import UseCallbackExample from '@/components/examples/UseCallbackExample'
+import UseIdExample from '@/components/examples/UseIdExample'
+import UseTransitionExample from '@/components/examples/UseTransitionExample'
+import UseDeferredValueExample from '@/components/examples/UseDeferredValueExample'
+import UseInsertionEffectExample from '@/components/examples/UseInsertionEffectExample'
+import UseSyncExternalStoreExample from '@/components/examples/UseSyncExternalStoreExample'
+import UseDebugValueExample from '@/components/examples/UseDebugValueExample'
 
 /**
  * Hooks Examples Main Page
@@ -28,11 +40,19 @@ type HookType =
   | 'usePathname'
   | 'useSearchParams'
   | 'useParams'
+  | 'useMemo'
+  | 'useCallback'
+  | 'useId'
+  | 'useTransition'
+  | 'useDeferredValue'
+  | 'useInsertionEffect'
+  | 'useSyncExternalStore'
+  | 'useDebugValue'
 
 interface HookInfo {
   id: HookType
   name: string
-  category: 'State' | 'Context' | 'Ref' | 'Effect' | 'Navigation'
+  category: 'State' | 'Context' | 'Ref' | 'Effect' | 'Navigation' | 'performance' | 'utility' | 'concurrent' | 'external' | 'debugging'
   description: string
   icon: string
   available: boolean
@@ -118,7 +138,8 @@ const hooksInfo: HookInfo[] = [
     category: 'Navigation',
     description: 'Điều hướng programmatically trong Next.js',
     icon: '🧭',
-    available: false // Sẽ implement sau
+    available: true,
+    component: UseRouterExample
   },
   {
     id: 'usePathname',
@@ -126,7 +147,8 @@ const hooksInfo: HookInfo[] = [
     category: 'Navigation',
     description: 'Lấy pathname hiện tại của URL',
     icon: '📍',
-    available: false // Sẽ implement sau
+    available: true,
+    component: UsePathnameExample
   },
   {
     id: 'useSearchParams',
@@ -134,7 +156,8 @@ const hooksInfo: HookInfo[] = [
     category: 'Navigation',
     description: 'Đọc và manipulate URL search parameters',
     icon: '🔍',
-    available: false // Sẽ implement sau
+    available: true,
+    component: UseSearchParamsExample
   },
   {
     id: 'useParams',
@@ -142,7 +165,80 @@ const hooksInfo: HookInfo[] = [
     category: 'Navigation',
     description: 'Lấy dynamic route parameters',
     icon: '🏷️',
-    available: false // Sẽ implement sau
+    available: true,
+    component: UseParamsExample
+  },
+  {
+    id: 'useMemo',
+    name: 'useMemo',
+    description: 'Memoize expensive calculations và complex data transformations cho performance optimization',
+    icon: '🧠',
+    available: true,
+    component: UseMemoExample,
+    category: 'performance'
+  },
+  {
+    id: 'useCallback',
+    name: 'useCallback',
+    description: 'Memoize functions để prevent unnecessary child component re-renders',
+    icon: '🔄',
+    available: true,
+    component: UseCallbackExample,
+    category: 'performance'
+  },
+  {
+    id: 'useId',
+    name: 'useId',
+    description: 'Generate unique IDs cho accessible form controls và ARIA attributes',
+    icon: '🆔',
+    available: true,
+    component: UseIdExample,
+    category: 'utility'
+  },
+  {
+    id: 'useTransition',
+    name: 'useTransition',
+    description: 'Mark state updates as non-urgent transitions để keep UI responsive',
+    icon: '⚡',
+    available: true,
+    component: UseTransitionExample,
+    category: 'concurrent'
+  },
+  {
+    id: 'useDeferredValue',
+    name: 'useDeferredValue',
+    description: 'Defer updating non-critical UI parts để prioritize urgent updates',
+    icon: '⏳',
+    available: true,
+    component: UseDeferredValueExample,
+    category: 'concurrent'
+  },
+  {
+    id: 'useInsertionEffect',
+    name: 'useInsertionEffect',
+    description: 'Insert elements into DOM before layout effects cho CSS-in-JS libraries',
+    icon: '💅',
+    available: true,
+    component: UseInsertionEffectExample,
+    category: 'Effect'
+  },
+  {
+    id: 'useSyncExternalStore',
+    name: 'useSyncExternalStore',
+    description: 'Subscribe React components to external mutable stores',
+    icon: '🔄',
+    available: true,
+    component: UseSyncExternalStoreExample,
+    category: 'external'
+  },
+  {
+    id: 'useDebugValue',
+    name: 'useDebugValue',
+    description: 'Display custom labels trong React DevTools cho custom hooks',
+    icon: '🐛',
+    available: true,
+    component: UseDebugValueExample,
+    category: 'debugging'
   }
 ]
 
