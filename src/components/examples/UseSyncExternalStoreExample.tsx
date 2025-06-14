@@ -533,7 +533,7 @@ const PerformanceComparison = () => {
   
   useEffect(() => {
     setRenderCount(prev => prev + 1)
-  })
+  }, [syncOnline, manualOnline])
   
   return (
     <div className="grid md:grid-cols-2 gap-6">

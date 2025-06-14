@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useInsertionEffect, useState, useRef, useEffect, useLayoutEffect } from 'react'
+import React, { useInsertionEffect, useState, useRef, useEffect, useLayoutEffect, useMemo } from 'react'
 
 /**
  * useInsertionEffect Hook Example - CSS-in-JS và DOM Timing
@@ -44,13 +44,16 @@ const injectedStyles = new Set<string>()
 const useCSS = (rule: string, styles: Record<string, string>) => {
   const [className] = useState(() => `css-${Math.random().toString(36).substr(2, 9)}`)
   
+  // Memoize styles to prevent unnecessary re-renders
+  const memoizedStyles = useMemo(() => styles, [JSON.stringify(styles)])
+  
   useInsertionEffect(() => {
     // Initialize global stylesheet if needed
     if (!globalStyleSheet) {
       globalStyleSheet = createStyleSheet()
     }
     
-    const styleRule = `.${className} { ${Object.entries(styles)
+    const styleRule = `.${className} { ${Object.entries(memoizedStyles)
       .map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${value}`)
       .join('; ')} }`
     
@@ -71,7 +74,7 @@ const useCSS = (rule: string, styles: Record<string, string>) => {
       // Cleanup is rarely needed for CSS injection
       // but could be implemented if required
     }
-  }, [className, styles])
+  }, [className, memoizedStyles])
   
   return className
 }
@@ -80,11 +83,9 @@ const useCSS = (rule: string, styles: Record<string, string>) => {
 const useThemedCSS = (styles: Record<string, string>, theme: Theme) => {
   const [className] = useState(() => `themed-${Math.random().toString(36).substr(2, 9)}`)
   
-  useInsertionEffect(() => {
-    if (!globalStyleSheet?.sheet) return
-    
-    // Replace theme variables in styles
-    const processedStyles = Object.entries(styles).reduce((acc, [key, value]) => {
+  // Memoize processed styles to prevent unnecessary re-renders
+  const processedStyles = useMemo(() => {
+    return Object.entries(styles).reduce((acc, [key, value]) => {
       let processedValue = value
         .replace(/var\(--primary-color\)/g, theme.primaryColor)
         .replace(/var\(--secondary-color\)/g, theme.secondaryColor)
@@ -96,6 +97,10 @@ const useThemedCSS = (styles: Record<string, string>, theme: Theme) => {
       acc[key] = processedValue
       return acc
     }, {} as Record<string, string>)
+  }, [styles, theme])
+  
+  useInsertionEffect(() => {
+    if (!globalStyleSheet?.sheet) return
     
     const styleRule = `.${className} { ${Object.entries(processedStyles)
       .map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${value}`)
@@ -111,14 +116,14 @@ const useThemedCSS = (styles: Record<string, string>, theme: Theme) => {
         console.error('Failed to inject themed CSS:', error)
       }
     }
-  }, [className, styles, theme])
+  }, [className, processedStyles])
   
   return className
 }
 
 // Component demonstrating CSS-in-JS with useInsertionEffect
 const StyledComponent = ({ text, variant = 'primary' }: { text: string, variant?: 'primary' | 'secondary' | 'danger' }) => {
-  const baseStyles = {
+  const baseStyles = useMemo(() => ({
     padding: '12px 24px',
     borderRadius: '8px',
     border: 'none',
@@ -128,9 +133,9 @@ const StyledComponent = ({ text, variant = 'primary' }: { text: string, variant?
     transition: 'all 0.2s ease',
     display: 'inline-block',
     textDecoration: 'none'
-  }
+  }), [])
   
-  const variantStyles = {
+  const variantStyles = useMemo(() => ({
     primary: {
       backgroundColor: '#3b82f6',
       color: 'white',
@@ -146,17 +151,20 @@ const StyledComponent = ({ text, variant = 'primary' }: { text: string, variant?
       color: 'white',
       boxShadow: '0 2px 4px rgba(239, 68, 68, 0.2)'
     }
-  }
+  }), [])
   
-  const className = useCSS(`styled-button-${variant}`, {
+  const combinedStyles = useMemo(() => ({
     ...baseStyles,
     ...variantStyles[variant]
-  })
+  }), [baseStyles, variantStyles, variant])
   
-  const hoverClassName = useCSS(`styled-button-${variant}-hover`, {
+  const hoverStyles = useMemo(() => ({
     transform: 'translateY(-1px)',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)'
-  })
+  }), [])
+  
+  const className = useCSS(`styled-button-${variant}`, combinedStyles)
+  const hoverClassName = useCSS(`styled-button-${variant}-hover`, hoverStyles)
   
   return (
     <button 
@@ -171,7 +179,7 @@ const StyledComponent = ({ text, variant = 'primary' }: { text: string, variant?
 
 // Themed component example
 const ThemedCard = ({ title, content, theme }: { title: string, content: string, theme: Theme }) => {
-  const cardStyles = {
+  const cardStyles = useMemo(() => ({
     backgroundColor: 'var(--background-color)',
     color: 'var(--text-color)',
     border: `1px solid var(--primary-color)`,
@@ -180,16 +188,16 @@ const ThemedCard = ({ title, content, theme }: { title: string, content: string,
     margin: '10px 0',
     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
     fontSize: 'var(--font-size)'
-  }
+  }), [])
   
-  const titleStyles = {
+  const titleStyles = useMemo(() => ({
     color: 'var(--primary-color)',
     fontSize: 'calc(var(--font-size) * 1.2)',
     fontWeight: 'bold',
     marginBottom: '10px',
     borderBottom: `2px solid var(--secondary-color)`,
     paddingBottom: '8px'
-  }
+  }), [])
   
   const cardClassName = useThemedCSS(cardStyles, theme)
   const titleClassName = useThemedCSS(titleStyles, theme)
@@ -262,7 +270,7 @@ const DynamicStyleDemo = () => {
   const [borderRadius, setBorderRadius] = useState('8px')
   const [fontSize, setFontSize] = useState('16px')
   
-  const dynamicStyles = {
+  const dynamicStyles = useMemo(() => ({
     backgroundColor: dynamicColor,
     color: 'white',
     border: 'none',
@@ -272,7 +280,7 @@ const DynamicStyleDemo = () => {
     cursor: 'pointer',
     transition: 'all 0.3s ease',
     margin: '5px'
-  }
+  }), [dynamicColor, borderRadius, fontSize])
   
   const dynamicClassName = useCSS('dynamic-button', dynamicStyles)
   
