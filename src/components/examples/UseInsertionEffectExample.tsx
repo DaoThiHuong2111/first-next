@@ -208,11 +208,10 @@ const TimingDemo = () => {
   const [isVisible, setIsVisible] = useState(false)
   const renderCount = useRef(0)
   
-  // Clear execution order on each render
-  if (renderCount.current === 0) {
+  // Reset execution order when visibility toggles
+  useEffect(() => {
     setExecutionOrder([])
-  }
-  renderCount.current++
+  }, [isVisible])
   
   useInsertionEffect(() => {
     console.log('🔵 useInsertionEffect executed')
