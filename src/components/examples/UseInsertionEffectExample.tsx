@@ -232,11 +232,11 @@ const TimingDemo = () => {
     }
   }, [isVisible])
   
+  // useInsertionEffect - ONLY for CSS injection, no state updates allowed
   useInsertionEffect(() => {
-    console.log('🔵 useInsertionEffect executed')
-    if (isMountedRef.current) {
-      setExecutionOrder(prev => [...prev, `${Date.now()}: useInsertionEffect executed`])
-    }
+    console.log('🔵 useInsertionEffect executed - CSS injection only')
+    // Note: useInsertionEffect must NOT schedule state updates
+    // This hook is specifically for CSS-in-JS libraries
   }, [isVisible])
   
   useLayoutEffect(() => {
@@ -264,12 +264,22 @@ const TimingDemo = () => {
       </button>
       
       <div className="text-sm space-y-1">
-        <div className="font-medium">Execution Order:</div>
+        <div className="font-medium">Execution Order (State Updates Only):</div>
         {executionOrder.map((entry, index) => (
           <div key={index} className="text-xs text-gray-600">
             {index + 1}. {entry}
           </div>
         ))}
+      </div>
+      
+      <div className="mt-3 p-2 bg-blue-100 text-blue-800 rounded text-sm">
+        <div className="font-medium mb-1">📝 Important Notes:</div>
+        <div className="text-xs space-y-1">
+          <div>• <strong>useInsertionEffect:</strong> Runs first but CANNOT update state</div>
+          <div>• <strong>useLayoutEffect:</strong> Runs after insertion, can update state</div>
+          <div>• <strong>useEffect:</strong> Runs last, can update state</div>
+          <div>• Check browser console để see useInsertionEffect logs</div>
+        </div>
       </div>
       
       {isVisible && (
