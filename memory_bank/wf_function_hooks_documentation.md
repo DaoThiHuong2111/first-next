@@ -32,6 +32,17 @@
 - ✅ Viết ví dụ code thực tế với comments chi tiết cho từng hook
 - ✅ Tổ chức tài liệu thành các file riêng biệt
 
+## Things done in current session:
+- ✅ Tạo UseStateExample với đầy đủ examples (counter, string, object, array, boolean)
+- ✅ Tạo UseReducerExample với advanced counter và todo app
+- ✅ Tạo UseContextExample với ThemeContext và UserContext
+- ✅ Tạo UseRefExample với DOM refs, mutable values, và timer examples
+- ✅ Tạo UseEffectExample với multiple effect patterns và custom hooks
+- ✅ Tạo UseImperativeHandleExample với custom input, counter, modal components
+- ✅ Tạo UseLayoutEffectExample với DOM measurements và layout calculations
+- ✅ Tạo main page /hooks-examples với navigation và filtering
+- ✅ Tất cả components có TypeScript types và comments chi tiết bằng tiếng Việt
+
 ## Things aren't done yet:
-- Tạo tổng kết và summary các hooks
-- Commit và push code 
+- ⏳ Next.js Navigation hooks: useRouter, usePathname, useSearchParams, useParams
+- ⏳ Deploy và test trên production 
