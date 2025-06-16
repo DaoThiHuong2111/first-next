@@ -112,7 +112,7 @@ export default function ServerActionsDemo() {
         <div className="bg-gray-50 rounded-lg p-4 mb-6">
           <h3 className="font-semibold text-gray-800 mb-2">📝 Code ví dụ:</h3>
           <pre className="text-sm text-gray-600 overflow-x-auto">
-{`async function createUser(formData: FormData) {
+{`async function createUserWithServerAction(formData: FormData) {
   'use server' // 🔥 Chỉ cần dòng này!
   
   const name = formData.get('name')
